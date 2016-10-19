@@ -6,9 +6,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}\\ChoViecDocSach.Web\\bin\\Debug\\netcoreapp1.0\\ChoViecDocSach.Web.dll",
+            "program": "${workspaceRoot}/ChoViecDocSach.Web/bin/Debug/netcoreapp1.0/ChoViecDocSach.Web.dll",
             "args": [],
-            "cwd": "${workspaceRoot}\\ChoViecDocSach.Web",
+            "cwd": "${workspaceRoot}/ChoViecDocSach.Web",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {
