@@ -35,13 +35,16 @@ namespace Onha.Kiet
             book = website.GetOneWholeHtml(firstpageUrl);
             // 2. assign 3 file names
             var title = VietnameseAccentsRemover.RemoveSign4VietnameseString(book.Title);
+            title = title.Trim();
             title = title.Replace(" ", "_");
 
             var downloadFolder = "";
+            var trashFolder = "";
 
             // get os type and set download path and kindle file
             if (Environment.GetEnvironmentVariable("_system_name") == "OSX")
             {
+                trashFolder = Path.Combine(Environment.GetEnvironmentVariable("HOME"), ".Trash");
                 downloadFolder = Path.Combine(Environment.GetEnvironmentVariable("HOME"), "Downloads");
                 KindlegenPath = "/Users/kiettran/Downloads/kindlegen";
             }
@@ -57,7 +60,7 @@ namespace Onha.Kiet
                 downloadFolder = DownloadFolder;
             }
            
-            htmlFilename = Path.Combine(downloadFolder, title) + ".html";   
+            htmlFilename = Path.Combine(trashFolder, title) + ".html";   
 
             ncxFilename = Path.Combine(Path.GetDirectoryName(htmlFilename), Path.GetFileNameWithoutExtension(htmlFilename) + ".ncx");
             opfBookFilename = Path.Combine(Path.GetDirectoryName(htmlFilename), Path.GetFileNameWithoutExtension(htmlFilename) + ".opf");
@@ -67,7 +70,22 @@ namespace Onha.Kiet
             CreateOPFBookDetail();
             // 4. Create mobile kindle file
             if (!string.IsNullOrWhiteSpace(KindlegenPath))
+            {
                 CreateKindleFile();
+                // we don't use these files, delete it for now
+                htmlFilename = Path.Combine(trashFolder, htmlFilename);
+                ncxFilename = Path.Combine(trashFolder, ncxFilename);
+                opfBookFilename = Path.Combine(trashFolder, opfBookFilename);
+
+                if (File.Exists(htmlFilename)) File.Delete(htmlFilename);
+                if (File.Exists(ncxFilename)) File.Delete(ncxFilename);
+                if (File.Exists(opfBookFilename)) File.Delete(opfBookFilename);
+
+                var trashMobiFileName = Path.Combine(trashFolder, title) + ".mobi";
+                var downloadMobiFileName = Path.Combine(downloadFolder, title) + ".mobi";
+                File.Copy(trashMobiFileName, downloadMobiFileName);
+
+            }
 
             return Path.Combine(downloadFolder, title) + ".mobi";
 

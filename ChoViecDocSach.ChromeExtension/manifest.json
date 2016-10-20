@@ -12,6 +12,7 @@
   "permissions": [
     "activeTab",
     "http://localhost:5000/",
-    "downloads"
+    "downloads",
+    "http://*/*","https://*/*"
   ]
 }

@@ -99,16 +99,37 @@ document.addEventListener('DOMContentLoaded', function () {
     //alert(url);
     var pageUrl = "http://localhost:5000/Home/GetKindleFile?url=" + url;
 
-    // httpGet(pageUrl);
-    chrome.downloads.download(
-      { url: pageUrl } );
-    var imageResult = document.getElementById('image-result');
-    imageResult.hidden = true;
+    // alert(pageUrl);
+    httpGet(pageUrl);
+
+    // chrome.downloads.download(
+    //   { url: pageUrl
+    //     , method: "GET"
+    //    } );
+
+    //var urlArray = new Array();
+    // for (var i = 0; i < visibleLinks.length; ++i) {
+    //   if (document.getElementById('check' + i).checked) {
+    //     urlArray.push(visibleLinks[i]);
+    //   }
+    // }
+    //urlArray.push(pageUrl);
+    //var zip = new JSZip();
+    //downloadFile(urlArray[count], onDownloadComplete, urlArray, zip);
+    // chrome.runtime.sendMessage({
+    //   action: 'download',
+    //   urls:   urlArray
+    // });
+    
+    // var a = document.createElement('a');
+    // a.href = pageUrl;
+    // a.download = url; // Filename
+    // a.click();                               // Trigger download
 
 
   });
 
-  function httpGet(theUrl) {
+ function httpGet(theUrl) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", theUrl, false); // false for synchronous request
     xmlHttp.send(null);
