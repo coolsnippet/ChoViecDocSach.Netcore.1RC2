@@ -50,6 +50,7 @@ namespace Onha.Kiet
             }
             else // windows
             {
+                trashFolder = Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE"), "Downloads");
                 downloadFolder = Path.Combine(Environment.GetEnvironmentVariable("USERPROFILE"), "Downloads");
                 KindlegenPath = @"C:\Kiet\Kinh\kindlegen.exe";
             }
@@ -83,7 +84,9 @@ namespace Onha.Kiet
 
                 var trashMobiFileName = Path.Combine(trashFolder, title) + ".mobi";
                 var downloadMobiFileName = Path.Combine(downloadFolder, title) + ".mobi";
-                File.Copy(trashMobiFileName, downloadMobiFileName);
+
+                if (trashMobiFileName != downloadMobiFileName) // on Windows, we don't need to copy because I didn't check for trash folder
+                    File.Copy(trashMobiFileName, downloadMobiFileName);
 
             }
 
