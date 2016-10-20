@@ -21,15 +21,21 @@ namespace ChoViecDocSach.Web.Controllers
         // https://github.com/aspnet/Mvc/issues/5053
         public IActionResult GetKindleFile(string url)
         {
-            var thuvienhoasen = new ThuVienHoaSen();         
-            var bookHelper = new BookHelper(thuvienhoasen);
-            //bookHelper.DownloadFolder = AppContext.BaseDirectory; // in case web app cannot access to a file outside of its folder
-            // var firstUrlPath = @"/a17221/ban-do-tu-phat";
-            // var firstUrlPath = @"/p27a10044/1/bai-van-khuyen-phat-tam-bo-de";            
-            var kindleFile = bookHelper.CreateKindleFiles(url);
-            var fileContent = new System.IO.FileStream(kindleFile, System.IO.FileMode.Open);
-            return File(fileContent, "application/octet-stream", System.IO.Path.GetFileName(kindleFile));          
-            
+            // check domain
+            var firstPageUri = new Uri(url);
+            if (firstPageUri.Host.Contains("thuvienhoasen.org"))
+            {
+                var thuvienhoasen = new ThuVienHoaSen();         
+                var bookHelper = new BookHelper(thuvienhoasen);
+                //bookHelper.DownloadFolder = AppContext.BaseDirectory; // in case web app cannot access to a file outside of its folder
+                // var firstUrlPath = @"/a17221/ban-do-tu-phat";
+                // var firstUrlPath = @"/p27a10044/1/bai-van-khuyen-phat-tam-bo-de";            
+                var kindleFile = bookHelper.CreateKindleFiles(url);
+                var fileContent = new System.IO.FileStream(kindleFile, System.IO.FileMode.Open);
+                return File(fileContent, "application/octet-stream", System.IO.Path.GetFileName(kindleFile));          
+            }
+
+            return View("Index");
         }
 
         public IActionResult About()

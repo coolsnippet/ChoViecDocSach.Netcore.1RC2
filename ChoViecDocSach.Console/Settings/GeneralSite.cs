@@ -18,11 +18,10 @@ namespace Onha.Kiet
         // get the all content of a book and return a book data
         public Book GetOneWholeHtml(string firstpage)
         {
-            // check firstpage
-            var firstPageUri = new Uri(firstpage);
+
             // 1. download
             webber = new Webber(domainHost);
-            var html = webber.GetStringAsync(firstPageUri.PathAndQuery).Result;
+            var html = webber.GetStringAsync(firstpage).Result;
             // 2. parse to get links of chapters
             links = GetLinks(html);
             // 3. get content div
