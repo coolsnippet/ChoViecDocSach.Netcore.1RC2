@@ -15,6 +15,7 @@ namespace Onha.Kiet
         public Book()
         {
             Chapters = new List<Chapter>();
+            
         }
     }
 }

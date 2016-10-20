@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -30,6 +31,13 @@ namespace Onha.Kiet
         public Task<string> GetStringAsync(string path)
         {
             return _client.GetStringAsync(path);
+        }
+
+        public async Task<byte[]> DownloadFile(string path)
+        {
+            byte[] buffer = await _client.GetByteArrayAsync(path); 
+            
+            return buffer;
         }
     }
 }

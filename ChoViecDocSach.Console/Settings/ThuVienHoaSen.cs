@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
+
 namespace Onha.Kiet
 {
     public class ThuVienHoaSen: GeneralSite
@@ -45,6 +46,12 @@ namespace Onha.Kiet
             if (nodeToRemove3!= null)
                 nodeToRemove3.ParentNode.RemoveChild(nodeToRemove3, false);
 
+            var tableNodes = div.SelectNodes("//table");
+            foreach (var node in tableNodes)
+            {
+                node.ParentNode.RemoveChild(node, true);
+            }
+
             return div;
         }
 
@@ -84,17 +91,40 @@ namespace Onha.Kiet
             //var span = contentNode.SelectSingleNode("//span[@style='font-size: medium;']");
             var texts = contentNode.Descendants("#text")
                                    .Where(n => n.HasChildNodes == false
-                                     && n.InnerText.Contains((char)13) == false ) ; // <> '\r'
+                                     && System.Net.WebUtility.HtmlDecode(n.InnerText).Contains((char)13) == false ) ; // <> '\r'
                                   
             if (texts!= null)
             {
-                book.Title = texts.FirstOrDefault().InnerText;
+                book.Title = System.Net.WebUtility.HtmlDecode(texts.FirstOrDefault().InnerText).Trim();
                 book.Copyright = "Thư Viện Hoa Sen";
-                book.Creator = texts.ElementAt(1).InnerText;
+                book.Creator =System.Net.WebUtility.HtmlDecode( texts.ElementAt(1).InnerText).Trim();
                 book.Publisher = "Thư Viện Hoa Sen";;
             }
 
             return book;
+        }
+
+        protected override List<KeyValuePair<string, byte[]>> FixImages(HtmlNode div)
+        {
+            var imgNodes = div.SelectNodes("//img");
+            var images = new List<KeyValuePair<string, byte[]>>();
+            
+            foreach (var node in imgNodes)
+            {
+                var imagePath = node.GetAttributeValue("data-original", "");
+                if (string.IsNullOrEmpty(imagePath))
+                    imagePath = node.GetAttributeValue("src", "");
+
+                var imageFile = System.IO.Path.GetFileName(imagePath);
+                if (!FileNameSanitizer.IsBadName(imageFile))
+                {                    
+                    var imageBytes= webber.DownloadFile(imagePath);
+                    images.Add(new KeyValuePair<string, byte[]>(imageFile, imageBytes.Result));
+                    node.SetAttributeValue("src", imageFile); // modify the name in source
+                }
+            }
+
+            return images;
         }
         #endregion
         

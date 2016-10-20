@@ -47,12 +47,15 @@ namespace Onha.Kiet
                 html = webber.GetStringAsync(link.Value).Result;
                 // 9. get main contain of chapter/page
                 var div = GetContentDiv(html);
-                // 10. add to book chapter
+                // 10. download images
+                var images = FixImages(div);
+                // 11. add to book chapter
                 book.Chapters.Add(new Chapter
                 {
                     Title = link.Key,
                     Content = div,
-                    Number = count
+                    Number = count,
+                    Images = images
                 });
                 count = count + 1;
             }
@@ -67,6 +70,7 @@ namespace Onha.Kiet
         // and different structure to get links of table of content
         abstract protected IEnumerable<KeyValuePair<string, string>> GetLinks(string htmlContent);
         abstract protected Book GetBookInformation(HtmlNode contentNode);
+        abstract protected List<KeyValuePair<string, byte[]>> FixImages(HtmlNode div);
 
         private HtmlNode HtmlTableOfContent()
         {
@@ -87,5 +91,7 @@ namespace Onha.Kiet
             toc.AppendChild(ul);
             return toc;
         }
+
+       
     }
 }

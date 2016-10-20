@@ -5,6 +5,7 @@ using HtmlAgilityPack;
 using System.Text;
 using System.Diagnostics;
 using System;
+using System.Collections.Generic;
 
 namespace Onha.Kiet
 {
@@ -34,9 +35,9 @@ namespace Onha.Kiet
             // 1. get the book base on website structure
             book = website.GetOneWholeHtml(firstpageUrl);
             // 2. assign 3 file names
-            var title = VietnameseAccentsRemover.RemoveSign4VietnameseString(book.Title);
-            title = title.Trim();
+            var title = VietnameseAccentsRemover.RemoveSign4VietnameseString(book.Title);         
             title = title.Replace(" ", "_");
+            title = FileNameSanitizer.GiveGoodName(title).Trim();
 
             var downloadFolder = "";
             var trashFolder = "";
@@ -69,6 +70,7 @@ namespace Onha.Kiet
             CreateHtmlFile();
             CreateNCXTableOfContent();
             CreateOPFBookDetail();
+            
             // 4. Create mobile kindle file
             if (!string.IsNullOrWhiteSpace(KindlegenPath))
             {
@@ -81,6 +83,12 @@ namespace Onha.Kiet
                 if (File.Exists(htmlFilename)) File.Delete(htmlFilename);
                 if (File.Exists(ncxFilename)) File.Delete(ncxFilename);
                 if (File.Exists(opfBookFilename)) File.Delete(opfBookFilename);
+
+                foreach (var image in book.Chapters.SelectMany(c => c.Images))
+                {
+                     var imageFilename = Path.Combine(trashFolder, image.Key);
+                     if (File.Exists(imageFilename)) File.Delete(imageFilename);
+                } 
 
                 var trashMobiFileName = Path.Combine(trashFolder, title) + ".mobi";
                 var downloadMobiFileName = Path.Combine(downloadFolder, title) + ".mobi";
@@ -197,7 +205,11 @@ namespace Onha.Kiet
             {
                 // 3. add anchor link to it				
                 output_body.AppendChild(HtmlNode.CreateNode(string.Format("<h2 id=\"ch{0}\" class=\"center\">{1}</h2>", chapter.Number, chapter.Title)));                
-                output_body.AppendChild(chapter.Content);;                                
+                output_body.AppendChild(chapter.Content);;    
+
+                //and download images
+                var imagePath = Path.GetDirectoryName(htmlFilename); 
+                SaveImagesToFiles(chapter.Images, imagePath);                            
             }
 
             // 4.output_html.Save(output_downloadFile, Encoding.UTF8);	
@@ -209,6 +221,19 @@ namespace Onha.Kiet
             }    
                 
         }  
+
+        private void SaveImagesToFiles(List<KeyValuePair<string, byte[]>> images, string path)
+        {
+            foreach (var item in images)
+            {
+                var filename = Path.Combine(path, item.Key);
+                using(var fileStream = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    fileStream.Write(item.Value, 0, item.Value.Length);
+                }                
+            }
+
+        }
 
         private void CreateKindleFile()
         {
