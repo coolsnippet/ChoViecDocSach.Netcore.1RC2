@@ -47,10 +47,14 @@ namespace Onha.Kiet
                 nodeToRemove3.ParentNode.RemoveChild(nodeToRemove3, false);
 
             var tableNodes = div.SelectNodes("//table");
-            foreach (var node in tableNodes)
+            if (tableNodes!= null)
             {
-                node.ParentNode.RemoveChild(node, true);
+                foreach (var node in tableNodes)
+                {
+                    node.ParentNode.RemoveChild(node, true);
+                }
             }
+
 
             return div;
         }
@@ -95,10 +99,16 @@ namespace Onha.Kiet
                                   
             if (texts!= null)
             {
-                book.Title = System.Net.WebUtility.HtmlDecode(texts.FirstOrDefault().InnerText).Trim();
-                book.Copyright = "Thư Viện Hoa Sen";
-                book.Creator =System.Net.WebUtility.HtmlDecode( texts.ElementAt(1).InnerText).Trim();
-                book.Publisher = "Thư Viện Hoa Sen";;
+                book.Title = System.Net.WebUtility.HtmlDecode(texts.FirstOrDefault().InnerText).Trim();            
+                book.Creator=System.Net.WebUtility.HtmlDecode( texts.ElementAt(1).InnerText).Trim();
+                book.Copyright = "Thư Viện Hoa Sen";               
+                book.Publisher = "Thư Viện Hoa Sen";
+                
+                if (book.Title.EndsWith(","))
+                {
+                    book.Title = book.Title + book.Creator;
+                    book.Creator=System.Net.WebUtility.HtmlDecode( texts.ElementAt(2).InnerText).Trim();
+                }
             }
 
             return book;

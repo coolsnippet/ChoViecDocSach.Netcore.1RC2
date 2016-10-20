@@ -7,7 +7,7 @@ namespace Onha.Kiet
         public static string GiveGoodName(string originalFilename)
         {
             var invalids = System.IO.Path.GetInvalidFileNameChars();
-            return System.String.Join("_", originalFilename.Split(invalids, System.StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
+            return System.String.Join("_", originalFilename.Split(invalids, System.StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.').TrimEnd(',');
         }
 
         public static bool IsBadName(string originalFilename)
