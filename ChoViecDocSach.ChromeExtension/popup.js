@@ -99,10 +99,11 @@ document.addEventListener('DOMContentLoaded', function () {
     //alert(url);
     var pageUrl = "http://localhost:5000/Home/GetKindleFile?url=" + url;
 
-    httpGet(pageUrl);
-
+    // httpGet(pageUrl);
+    chrome.downloads.download(
+      { url: pageUrl } );
     var imageResult = document.getElementById('image-result');
-
+    imageResult.hidden = true;
 
 
   });
