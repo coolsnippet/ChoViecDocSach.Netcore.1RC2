@@ -39,6 +39,9 @@ namespace Onha.Kiet
             title = title.Replace(" ", "_");
             title = FileNameSanitizer.GiveGoodName(title).Trim();
 
+            if (string.IsNullOrEmpty(title))
+                return string.Empty;
+
             var downloadFolder = "";
             var trashFolder = "";
 
@@ -94,7 +97,10 @@ namespace Onha.Kiet
                 var downloadMobiFileName = Path.Combine(downloadFolder, title) + ".mobi";
 
                 if (trashMobiFileName != downloadMobiFileName) // on Windows, we don't need to copy because I didn't check for trash folder
-                    File.Copy(trashMobiFileName, downloadMobiFileName);
+                {
+                    if (File.Exists(downloadMobiFileName)) File.Delete(downloadMobiFileName);
+                    File.Move(trashMobiFileName, downloadMobiFileName);
+                }
 
             }
 

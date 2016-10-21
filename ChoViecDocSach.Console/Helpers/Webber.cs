@@ -33,9 +33,9 @@ namespace Onha.Kiet
             return _client.GetStringAsync(path);
         }
 
-        public async Task<byte[]> DownloadFile(string path)
+        public Task<byte[]> DownloadFile(string path)
         {
-            byte[] buffer = await _client.GetByteArrayAsync(path); 
+            Task<byte[]> buffer =  _client.GetByteArrayAsync(path); 
             
             return buffer;
         }

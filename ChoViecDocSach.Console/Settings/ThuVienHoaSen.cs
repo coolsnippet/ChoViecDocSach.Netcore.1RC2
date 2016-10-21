@@ -6,10 +6,10 @@ using System.Text.RegularExpressions;
 
 namespace Onha.Kiet
 {
-    public class ThuVienHoaSen: GeneralSite
+    public class ThuVienHoaSen : GeneralSite
     {
         const string DOMAIN_HOST = @"http://thuvienhoasen.org";
-        public ThuVienHoaSen (): base(DOMAIN_HOST)
+        public ThuVienHoaSen() : base(DOMAIN_HOST)
         {
         }
 
@@ -37,17 +37,17 @@ namespace Onha.Kiet
 
             // this perfect to remove a node	
             // http://stackoverflow.com/questions/12092575/html-agility-pack-remove-element-but-not-innerhtml
-            if (nodeToRemove!= null)
+            if (nodeToRemove != null)
                 nodeToRemove.ParentNode.RemoveChild(nodeToRemove, false);
-            
-            if (nodeToRemove2!= null)
+
+            if (nodeToRemove2 != null)
                 nodeToRemove2.ParentNode.RemoveChild(nodeToRemove2, false);
-            
-            if (nodeToRemove3!= null)
+
+            if (nodeToRemove3 != null)
                 nodeToRemove3.ParentNode.RemoveChild(nodeToRemove3, false);
 
             var tableNodes = div.SelectNodes("//table");
-            if (tableNodes!= null)
+            if (tableNodes != null)
             {
                 foreach (var node in tableNodes)
                 {
@@ -73,17 +73,17 @@ namespace Onha.Kiet
                               .Where(n => n.GetAttributeValue("class", "").Equals("nw_book_tree"))
                               .FirstOrDefault();
 
-            if (chapter_div!=null)
+            if (chapter_div != null)
             {
                 return chapter_div.Descendants("a")
                            .Where(n => n.Attributes["title"] != null)
                            .Select(item => new KeyValuePair<string, string>(
                                System.Net.WebUtility.HtmlDecode(item.InnerHtml), //key is name of each chapter
                                item.Attributes["href"].Value // value is the link
-                               
+
                            ));
             }
-            
+
             return null;
         }
 
@@ -91,23 +91,32 @@ namespace Onha.Kiet
         {
             var book = new Book();
             //style="font-size: medium;"
-            
+
             //var span = contentNode.SelectSingleNode("//span[@style='font-size: medium;']");
             var texts = contentNode.Descendants("#text")
                                    .Where(n => n.HasChildNodes == false
-                                     && System.Net.WebUtility.HtmlDecode(n.InnerText).Contains((char)13) == false ) ; // <> '\r'
-                                  
-            if (texts!= null)
+
+                                     && System.Net.WebUtility.HtmlDecode(n.InnerText).Contains((char)13) == false // <> '\r'
+                                     & !System.Net.WebUtility.HtmlDecode(n.InnerText).Contains("Tủ Sách Đạo Phật Ngày Nay") // ignore this title
+                                     & !string.IsNullOrEmpty(System.Net.WebUtility.HtmlDecode(n.InnerText).Trim()) // no empty line
+                                     );
+
+            book.Title = "Thích ca mâu ni";
+            book.Creator = "Thích ca mâu ni";
+            book.Copyright = "Thư Viện Hoa Sen";
+            book.Publisher = "Thư Viện Hoa Sen";
+
+            if (texts != null)
             {
-                book.Title = System.Net.WebUtility.HtmlDecode(texts.FirstOrDefault().InnerText).Trim();            
-                book.Creator=System.Net.WebUtility.HtmlDecode( texts.ElementAt(1).InnerText).Trim();
-                book.Copyright = "Thư Viện Hoa Sen";               
-                book.Publisher = "Thư Viện Hoa Sen";
-                
-                if (book.Title.EndsWith(","))
+                book.Title = System.Net.WebUtility.HtmlDecode(texts.FirstOrDefault().InnerText).Trim();
+                book.Creator = System.Net.WebUtility.HtmlDecode(texts.ElementAt(1).InnerText).Trim();
+
+                if (book.Title.EndsWith(",")
+                || book.Title.EndsWith(":")
+                )
                 {
                     book.Title = book.Title + book.Creator;
-                    book.Creator=System.Net.WebUtility.HtmlDecode( texts.ElementAt(2).InnerText).Trim();
+                    book.Creator = System.Net.WebUtility.HtmlDecode(texts.ElementAt(2).InnerText).Trim();
                 }
             }
 
@@ -116,9 +125,9 @@ namespace Onha.Kiet
 
         protected override List<KeyValuePair<string, byte[]>> FixImages(HtmlNode div)
         {
-            var imgNodes = div.SelectNodes("//img");
+            var imgNodes = div.Descendants("img");// .SelectNodes("//img");
             var images = new List<KeyValuePair<string, byte[]>>();
-            
+
             foreach (var node in imgNodes)
             {
                 var imagePath = node.GetAttributeValue("data-original", "");
@@ -126,17 +135,38 @@ namespace Onha.Kiet
                     imagePath = node.GetAttributeValue("src", "");
 
                 var imageFile = System.IO.Path.GetFileName(imagePath);
+
                 if (!FileNameSanitizer.IsBadName(imageFile))
-                {                    
-                    var imageBytes= webber.DownloadFile(imagePath);
-                    images.Add(new KeyValuePair<string, byte[]>(imageFile, imageBytes.Result));
-                    node.SetAttributeValue("src", imageFile); // modify the name in source
+                {
+                    var imageBytesTask = webber.DownloadFile(imagePath);
+                    byte[] imageBytes = null;
+
+                    try
+                    {
+                        imageBytes = imageBytesTask.Result;
+
+                        if (imageBytesTask.Status != System.Threading.Tasks.TaskStatus.Faulted)
+                        {
+                            images.Add(new KeyValuePair<string, byte[]>(imageFile, imageBytes));
+                        }
+                        node.SetAttributeValue("src", imageFile); // modify the name in source
+                    }
+                    catch (System.AggregateException ex)
+                    {
+                        // node.RemoveChild(node);
+                    }
+                    finally
+                    {
+
+                    }
+
+
                 }
             }
 
             return images;
         }
         #endregion
-        
+
     }
 }
