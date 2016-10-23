@@ -12,8 +12,6 @@ namespace Onha.Kiet
     // Links 
     // get image
     // https://social.msdn.microsoft.com/Forums/vstudio/en-US/a87e6ec2-248b-4c67-9c8b-e10aa637b275/how-can-i-get-images-names-to-a-liststring-from-a-url-of-a-website-using-htmlagilitypack-?forum=csharpgeneral
-
-
     public class BookHelper
     {
         private Book book;
@@ -218,7 +216,7 @@ namespace Onha.Kiet
                 var imagePath = Path.GetDirectoryName(htmlFilename); 
                 SaveImagesToFiles(chapter.Images, imagePath);                            
             }
-            // 5. remove style attributes
+            // 5. remove style attributes (font-size)
             RemoveHardStyleSize(output_body);
 
             // 6.output_html.Save(output_downloadFile, Encoding.UTF8);	

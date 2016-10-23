@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<p><a id="markdown-my-note" name="my-note"></a></p>
+<h1 id="my-note">My note</h1>
+<!-- TOC insertAnchor:true orderedList:true -->
+
+
+<ol>
+<li><p><a href="#my-note">My note</a></p>
+<ol>
+<li><p><a href="#coorporate-proxy-ho-to-find">Coorporate proxy, ho to find</a></p>
+<ol>
+<li><a href="#1-how-to-find-proxy-in-coorporate">1. how to find proxy in coorporate</a><br /></li>
+<li><a href="#2-program-pacparser-in-chose-this">2. program: pacparser (in chose this)</a><br /></li>
+<li><a href="#3-sample-run-this">3. SAMPLE (run this)</a><br /></li>
+<li><a href="#4-i-use-this-proxy-for-visual-studio-code">4. I use this proxy for Visual Studio Code</a><br /></li>
+<li><a href="#5-for-ithub-windows">5. for ithub windows</a><br /></li>
+<li><a href="#6-for-npm-node-package-manager-so-i-can-install-brewer-yeoman-to-make-scaffolding-for-asp-mvc-5-template-for-dotnet-core-rc-2">6. for npm (node package manager so I can install brewer, yeoman to make scaffolding for asp mvc 5 template for dotnet core rc 2)</a><br /></li>
+<li><a href="#8-sublime">8. sublime</a><br /></li>
+<li><a href="#9-bower-package-manager-for-web-downloading-dependencies">9. bower (package manager for web, downloading dependencies)</a></li>
+</ol></li>
+</ol></li>
+</ol>
+<!-- /TOC -->
+
+
+<p><a id="markdown-coorporate-proxy-ho-to-find" name="coorporate-proxy-ho-to-find"></a></p>
+<h2 id="coorporate-proxy-ho-to-find">Coorporate proxy, ho to find</h2>
+<p><a id="markdown-1-how-to-find-proxy-in-coorporate" name="1-how-to-find-proxy-in-coorporate"></a></p>
+<h3 id="how-to-find-proxy-in-coorporate">1. how to find proxy in coorporate</h3>
+<p>here:<br /> <a href="http://stackoverflow.com/questions/22368515/how-to-see-the-proxy-settings-on-windows">http://stackoverflow.com/questions/22368515/how-to-see-the-proxy-settings-on-windows</a><br /> says that<br /> It’s possible to view proxy settings in Google Chrome: <a href="chrome://net-internals/#proxy">chrome://net-internals/#proxy</a></p>
+<p><a id="markdown-2-program-pacparser-in-chose-this" name="2-program-pacparser-in-chose-this"></a></p>
+<h3 id="program-pacparser-in-chose-this">2. program: pacparser (in chose this)</h3>
+<pre><code>http://code.google.com/p/pacparser/
+
+and release for win32
+https://github.com/pacparser/pacparser/releases
+
+from here
+http://stackoverflow.com/questions/10508397/how-to-find-proxy-server-and-password-from-pac-file
+
+and we need install this mingw
+http://www.mingw.org/wiki/getting_started
+
+2 ways, I chose install using GUI
+and then add to environment PATH the &lt;install folder&gt;\path
+
+wpad file:
+http://wpad/wpad.dat
+
+download that file and save to download folder</code></pre>
+<p><a id="markdown-3-sample-run-this" name="3-sample-run-this"></a></p>
+<h3 id="sample-run-this">3. SAMPLE (run this)</h3>
+<pre><code>C:\Users\u330652&gt;C:\Users\u330652\Downloads\pacparser-1.3.3-win32\pacparser-1.3.3-win32\pactester.exe -p C:\Users\u330652\Downloads\wpad.dat -u https://www.goog
+le.com/
+
+PROXY 10.160.0.45:80; PROXY 10.160.0.47:80; PROXY 10.160.0.46:80; PROXY 10.160.0
+.42:80; PROXY 10.160.0.43:80; PROXY 10.160.0.41:80; PROXY 10.160.0.44:80; PROXY
+10.160.0.40:80; DIRECT</code></pre>
+<p><a id="markdown-4-i-use-this-proxy-for-visual-studio-code" name="4-i-use-this-proxy-for-visual-studio-code"></a></p>
+<h3 id="i-use-this-proxy-for-visual-studio-code">4. I use this proxy for Visual Studio Code</h3>
+<pre><code>http://10.160.0.45</code></pre>
+<p><a id="markdown-5-for-ithub-windows" name="5-for-ithub-windows"></a></p>
+<h3 id="for-ithub-windows">5. for ithub windows</h3>
+<pre><code>from this: http://stackoverflow.com/questions/16153450/github-windows-client-behind-proxy
+
+Add these entried to your &#39;.gitconfig&#39; file in your user directory (go to %USERPROFILE%):
+
+[http]
+    proxy = http://&lt;proxy address&gt;:&lt;proxy port&gt;
+
+[https]
+    proxy = https://&lt;proxy address&gt;:&lt;proxy port&gt;
+
+so I set    
+[http]
+    proxy = http://10.160.0.45</code></pre>
+<p><a id="markdown-6-for-npm-node-package-manager-so-i-can-install-brewer-yeoman-to-make-scaffolding-for-asp-mvc-5-template-for-dotnet-core-rc-2" name="6-for-npm-node-package-manager-so-i-can-install-brewer-yeoman-to-make-scaffolding-for-asp-mvc-5-template-for-dotnet-core-rc-2"></a></p>
+<h3 id="for-npm-node-package-manager-so-i-can-install-brewer-yeoman-to-make-scaffolding-for-asp-mvc-5-template-for-dotnet-core-rc-2">6. for npm (node package manager so I can install brewer, yeoman to make scaffolding for asp mvc 5 template for dotnet core rc 2)</h3>
+<pre><code>from https://jjasonclark.com/how-to-setup-node-behind-web-proxy
+
+I do: 
+npm config set proxy http://10.160.0.45
+
+and
+
+npm config set registry http://registry.npmjs.org/</code></pre>
+<ol>
+<li><p>git<br /> from <a href="http://stackoverflow.com/questions/783811/getting-git-to-work-with-a-proxy-server">http://stackoverflow.com/questions/783811/getting-git-to-work-with-a-proxy-server</a></p>
+<p>Command to use:<br /> git config –global http.proxy <a href="http://proxyuser:proxypwd@proxy.server.com:8080">http://proxyuser:proxypwd@proxy.server.com:8080</a><br />I do:<br />git config –global http.proxy <a href="http://10.160.0.43:80">http://10.160.0.43:80</a><br />git config –get http.proxy <a href="http://10.160.0.43:80">http://10.160.0.43:80</a></p></li>
+</ol>
+<p><a id="markdown-8-sublime" name="8-sublime"></a></p>
+<h3 id="sublime">8. sublime</h3>
+<pre><code>from http://www.bonusbits.com/wiki/HowTo:Add_HTTP_Proxy_to_Package_Control_for_Sublime_Text
+
+I do:
+Browse Preferences | Package Settings | Package Control | Settings Default
+and add
+&quot;http_proxy&quot;: &quot;http://10.160.0.45:80&quot;</code></pre>
+<p><a id="markdown-9-bower-package-manager-for-web-downloading-dependencies" name="9-bower-package-manager-for-web-downloading-dependencies"></a></p>
+<h3 id="bower-package-manager-for-web-downloading-dependencies">9. bower (package manager for web, downloading dependencies)</h3>
+<pre><code>from http://stackoverflow.com/questions/21705091/bower-behind-a-proxy
+
+I do:
+    create a file name .bowerrc on (%userprofile% folder) by using command line
+    copy con .bowerrc
+    and add 
+    {
+        &quot;proxy&quot;:&quot;http://10.160.0.45:80&quot;,            
+    }
+    and then F6 to save</code></pre>
+</body>
+</html>
