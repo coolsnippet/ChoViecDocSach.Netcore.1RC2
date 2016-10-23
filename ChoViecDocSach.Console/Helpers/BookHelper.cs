@@ -204,21 +204,24 @@ namespace Onha.Kiet
             if (book.TableOfContent != null)
             {
                 output_body.PrependChild(book.TableOfContent);
-                output_body.AppendChild(HtmlNode.CreateNode("<div class=\"pagebreak\"></div>"));
+                output_body.AppendChild(HtmlNode.CreateNode("<div class=\"pagebreak\"></div>")); 
             }
 
             foreach (var chapter in book.Chapters)
             {
-                // 3. add anchor link to it				
+                // 3. add anchor link to it			
+                output_body.AppendChild(HtmlNode.CreateNode("<div class=\"pagebreak\"></div>")); // add page break for new link
                 output_body.AppendChild(HtmlNode.CreateNode(string.Format("<h2 id=\"ch{0}\" class=\"center\">{1}</h2>", chapter.Number, chapter.Title)));                
                 output_body.AppendChild(chapter.Content);;    
 
-                //and download images
+                // 4. and download images
                 var imagePath = Path.GetDirectoryName(htmlFilename); 
                 SaveImagesToFiles(chapter.Images, imagePath);                            
             }
+            // 5. remove style attributes
+            RemoveHardStyleSize(output_body);
 
-            // 4.output_html.Save(output_downloadFile, Encoding.UTF8);	
+            // 6.output_html.Save(output_downloadFile, Encoding.UTF8);	
             if (File.Exists(htmlFilename)) File.Delete(htmlFilename);
 			
             using (var output_stream = File.Create(htmlFilename))
@@ -227,6 +230,20 @@ namespace Onha.Kiet
             }    
                 
         }  
+
+        private void RemoveHardStyleSize(HtmlNode node)
+        {
+            var elementsWithStyleAttribute = node.SelectNodes("//@style");
+
+            if (elementsWithStyleAttribute!=null)
+            {
+                foreach (var element in elementsWithStyleAttribute)
+                {
+                    if (element.Attributes["style"].Value.Contains("font-size"))
+                        element.Attributes["style"].Remove();
+                }
+            }
+        }
 
         private void SaveImagesToFiles(List<KeyValuePair<string, byte[]>> images, string path)
         {
