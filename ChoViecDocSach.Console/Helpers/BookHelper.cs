@@ -245,6 +245,9 @@ namespace Onha.Kiet
 
         private void SaveImagesToFiles(List<KeyValuePair<string, byte[]>> images, string path)
         {
+            if (images== null)
+                return;
+
             foreach (var item in images)
             {
                 var filename = Path.Combine(path, item.Key);

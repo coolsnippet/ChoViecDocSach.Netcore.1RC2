@@ -35,6 +35,8 @@ namespace ChoViecDocSach.Web.Controllers
                 var kindleFile = bookHelper.CreateKindleFiles(url);
                 // var fileContent = new System.IO.FileStream(kindleFile, System.IO.FileMode.Open);
                 // return File(fileContent, "application/octet-stream", System.IO.Path.GetFileName(kindleFile));          
+            } else if (1 == 1){
+
             }
 
             return View("Index");
