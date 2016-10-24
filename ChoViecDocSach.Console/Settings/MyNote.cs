@@ -8,7 +8,7 @@ namespace Onha.Kiet
 {
     public class MyNote : GeneralSite
     {
-        const string DOMAIN_HOST = @"http://thuvienhoasen.org";
+        const string DOMAIN_HOST = @"";
         public MyNote() : base(DOMAIN_HOST)
         {
         }
@@ -35,9 +35,9 @@ namespace Onha.Kiet
             var book = new Book();
 
             //var span = contentNode.SelectSingleNode("//span[@style='font-size: medium;']");
-            var toc = contentNode.SelectSingleNode("//comment()[contains(., 'TOC')");
+            var toc = contentNode.SelectSingleNode("//comment()[contains(., 'TOC')]");
             var body = contentNode.SelectSingleNode("//body");
-            var title = contentNode.SelectSingleNode("//h1)");
+            var title = contentNode.SelectSingleNode("//h1");
             book.Title = "Thích ca mâu ni";
             book.Creator = "Kiet Tran";
             book.Copyright = "Kiet Tran";

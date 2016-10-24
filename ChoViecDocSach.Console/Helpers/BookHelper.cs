@@ -23,7 +23,7 @@ namespace Onha.Kiet
         public string DownloadFolder { get; set; }
         public BookHelper(GeneralSite website)
         {
-            this.website = website; 
+            this.website = website;
         }
 
         // include 3 files: html (content), opf (main file) and ncx (content file)
@@ -33,7 +33,7 @@ namespace Onha.Kiet
             // 1. get the book base on website structure
             book = website.GetOneWholeHtml(firstpageUrl);
             // 2. assign 3 file names
-            var title = VietnameseAccentsRemover.RemoveSign4VietnameseString(book.Title);         
+            var title = VietnameseAccentsRemover.RemoveSign4VietnameseString(book.Title);
             title = title.Replace(" ", "_");
             title = FileNameSanitizer.GiveGoodName(title).Trim();
 
@@ -58,12 +58,12 @@ namespace Onha.Kiet
             }
 
             // in case we use Website project to reference to it
-            if (!string.IsNullOrEmpty(DownloadFolder)) 
+            if (!string.IsNullOrEmpty(DownloadFolder))
             {
                 downloadFolder = DownloadFolder;
             }
-           
-            htmlFilename = Path.Combine(trashFolder, title) + ".html";   
+
+            htmlFilename = Path.Combine(trashFolder, title) + ".html";
 
             ncxFilename = Path.Combine(Path.GetDirectoryName(htmlFilename), Path.GetFileNameWithoutExtension(htmlFilename) + ".ncx");
             opfBookFilename = Path.Combine(Path.GetDirectoryName(htmlFilename), Path.GetFileNameWithoutExtension(htmlFilename) + ".opf");
@@ -71,7 +71,7 @@ namespace Onha.Kiet
             CreateHtmlFile();
             CreateNCXTableOfContent();
             CreateOPFBookDetail();
-            
+
             // 4. Create mobile kindle file
             if (!string.IsNullOrWhiteSpace(KindlegenPath))
             {
@@ -87,9 +87,9 @@ namespace Onha.Kiet
 
                 foreach (var image in book.Chapters.SelectMany(c => c.Images))
                 {
-                     var imageFilename = Path.Combine(trashFolder, image.Key);
-                     if (File.Exists(imageFilename)) File.Delete(imageFilename);
-                } 
+                    var imageFilename = Path.Combine(trashFolder, image.Key);
+                    if (File.Exists(imageFilename)) File.Delete(imageFilename);
+                }
 
                 var trashMobiFileName = Path.Combine(trashFolder, title) + ".mobi";
                 var downloadMobiFileName = Path.Combine(downloadFolder, title) + ".mobi";
@@ -174,7 +174,7 @@ namespace Onha.Kiet
                                 ),
 
                                 from chapter in book.Chapters
-                                select new XElement("navPoint", new XAttribute("id", "ch"+ chapter.Number), new XAttribute("playOrder", (chapter.Number + 1)),
+                                select new XElement("navPoint", new XAttribute("id", "ch" + chapter.Number), new XAttribute("playOrder", (chapter.Number + 1)),
                                         new XElement("navLabel",
                                             new XElement("text", chapter.Title)
                                         ),
@@ -202,59 +202,67 @@ namespace Onha.Kiet
             if (book.TableOfContent != null)
             {
                 output_body.PrependChild(book.TableOfContent);
-                output_body.AppendChild(HtmlNode.CreateNode("<div class=\"pagebreak\"></div>")); 
+                output_body.AppendChild(HtmlNode.CreateNode("<div class=\"pagebreak\"></div>"));
             }
 
             foreach (var chapter in book.Chapters)
             {
                 // 3. add anchor link to it			
                 output_body.AppendChild(HtmlNode.CreateNode("<div class=\"pagebreak\"></div>")); // add page break for new link
-                output_body.AppendChild(HtmlNode.CreateNode(string.Format("<h2 id=\"ch{0}\" class=\"center\">{1}</h2>", chapter.Number, chapter.Title)));                
-                output_body.AppendChild(chapter.Content);;    
+                output_body.AppendChild(HtmlNode.CreateNode(string.Format("<h2 id=\"ch{0}\" class=\"center\">{1}</h2>", chapter.Number, chapter.Title)));
+                output_body.AppendChild(chapter.Content); ;
 
                 // 4. and download images
-                var imagePath = Path.GetDirectoryName(htmlFilename); 
-                SaveImagesToFiles(chapter.Images, imagePath);                            
+                var imagePath = Path.GetDirectoryName(htmlFilename);
+                SaveImagesToFiles(chapter.Images, imagePath);
             }
             // 5. remove style attributes (font-size)
-            RemoveHardStyleSize(output_body);
+            // RemoveHardStyleSize(output_body);
 
             // 6.output_html.Save(output_downloadFile, Encoding.UTF8);	
             if (File.Exists(htmlFilename)) File.Delete(htmlFilename);
-			
+
             using (var output_stream = File.Create(htmlFilename))
             {
-			    output_html.Save(output_stream, Encoding.UTF8);
-            }    
-                
-        }  
+                output_html.Save(output_stream, Encoding.UTF8);
+            }
+
+        }
 
         private void RemoveHardStyleSize(HtmlNode node)
         {
-            var elementsWithStyleAttribute = node.SelectNodes("//@style");
-
-            if (elementsWithStyleAttribute!=null)
+            try
             {
-                foreach (var element in elementsWithStyleAttribute)
+                var elementsWithStyleAttribute = node.SelectNodes("//@style");
+
+                if (elementsWithStyleAttribute != null)
                 {
-                    if (element.Attributes["style"].Value.Contains("font-size"))
-                        element.Attributes["style"].Remove();
+                    foreach (var element in elementsWithStyleAttribute)
+                    {
+                        if (element.Attributes["style"].Value.Contains("font-size"))
+                            element.Attributes["style"].Remove();
+                    }
                 }
             }
+            catch (System.Exception)
+            {
+
+            }
+
         }
 
         private void SaveImagesToFiles(List<KeyValuePair<string, byte[]>> images, string path)
         {
-            if (images== null)
+            if (images == null)
                 return;
 
             foreach (var item in images)
             {
                 var filename = Path.Combine(path, item.Key);
-                using(var fileStream = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (var fileStream = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
                     fileStream.Write(item.Value, 0, item.Value.Length);
-                }                
+                }
             }
 
         }
@@ -262,11 +270,11 @@ namespace Onha.Kiet
         private void CreateKindleFile()
         {
             Process process = new Process();
-			process.StartInfo.FileName = KindlegenPath; //@"/Users/kiettran/Downloads/kindlegen";
-			process.StartInfo.Arguments = opfBookFilename;	
-			process.StartInfo.CreateNoWindow = false;
-			process.Start();
-			process.WaitForExit();
+            process.StartInfo.FileName = KindlegenPath; //@"/Users/kiettran/Downloads/kindlegen";
+            process.StartInfo.Arguments = opfBookFilename;
+            process.StartInfo.CreateNoWindow = false;
+            process.Start();
+            process.WaitForExit();
         }
     }
 }

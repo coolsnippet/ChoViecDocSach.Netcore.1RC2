@@ -24,7 +24,10 @@ namespace Onha.Kiet
                 MaxResponseContentBufferSize = 1000000
             };
 
-            _client.BaseAddress = new Uri(hostname);
+            if (!string.IsNullOrEmpty(hostname))
+            {
+                _client.BaseAddress = new Uri(hostname);
+            }
 
         }
 

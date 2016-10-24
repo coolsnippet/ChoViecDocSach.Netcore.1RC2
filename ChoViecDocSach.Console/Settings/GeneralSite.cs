@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using HtmlAgilityPack;
 
 namespace Onha.Kiet
@@ -10,6 +11,11 @@ namespace Onha.Kiet
         protected string domainHost;
         protected Webber webber; // to download
 
+        public GeneralSite()
+        {
+
+        }
+
         public GeneralSite(string domainHost)
         {
             this.domainHost = domainHost;
@@ -18,10 +24,21 @@ namespace Onha.Kiet
         // get the all content of a book and return a book data
         public Book GetOneWholeHtml(string firstpage)
         {
-
+            var html = string.Empty;
             // 1. download
+
+            // special for note
+            if (string.IsNullOrEmpty(domainHost))
+            {
+                var uri = new Uri(firstpage);
+                html = File.ReadAllText(uri.AbsolutePath);
+                return GetBookInformation(GetContentDiv(html));
+            }
+
+            // continue as normal
             webber = new Webber(domainHost);
-            var html = webber.GetStringAsync(firstpage).Result;
+            html = webber.GetStringAsync(firstpage).Result;
+
             // 2. parse to get links of chapters
             links = GetLinks(html);
             // 3. get content div
@@ -92,6 +109,6 @@ namespace Onha.Kiet
             return toc;
         }
 
-       
+
     }
 }
