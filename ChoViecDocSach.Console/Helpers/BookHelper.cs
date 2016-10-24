@@ -195,7 +195,9 @@ namespace Onha.Kiet
             {
                 if (File.Exists(htmlFilename)) File.Delete(htmlFilename);
                 File.Copy(alreadyHtmlFile, htmlFilename);
-            }            
+                return;
+            }          
+            // back to normal  
 
             // 1. html document for ouputfile
             var output_html = new HtmlDocument();
