@@ -11,8 +11,11 @@
         4. [4. I use this proxy for Visual Studio Code](#4-i-use-this-proxy-for-visual-studio-code)
         5. [5. for ithub windows](#5-for-ithub-windows)
         6. [6. for npm (node package manager so I can install brewer, yeoman to make scaffolding for asp mvc 5 template for dotnet core rc 2)](#6-for-npm-node-package-manager-so-i-can-install-brewer-yeoman-to-make-scaffolding-for-asp-mvc-5-template-for-dotnet-core-rc-2)
-        7. [8. sublime](#8-sublime)
-        8. [9. bower (package manager for web, downloading dependencies)](#9-bower-package-manager-for-web-downloading-dependencies)
+        7. [7. git](#7-git)
+        8. [8. sublime](#8-sublime)
+        9. [9. bower (package manager for web, downloading dependencies)](#9-bower-package-manager-for-web-downloading-dependencies)
+        10. [10. install typing behind corporate proxy](#10-install-typing-behind-corporate-proxy)
+        11. [11. vs code setting sync behind the proxy](#11-vs-code-setting-sync-behind-the-proxy)
 
 <!-- /TOC -->
 
@@ -62,6 +65,17 @@
 ### 4. I use this proxy for Visual Studio Code
 	http://10.160.0.45
 
+	in File/Preferences/user settting
+	and add 
+
+	// Place your settings in this file to overwrite the default settings
+	{
+
+		"http.proxy": "http://10.160.0.45",
+		// Whether the proxy server certificate should be verified against the list of supplied CAs.
+		"http.proxyStrictSSL": false
+	}
+
 <a id="markdown-5-for-ithub-windows" name="5-for-ithub-windows"></a>
 ### 5. for ithub windows
     from this: http://stackoverflow.com/questions/16153450/github-windows-client-behind-proxy
@@ -89,7 +103,8 @@
 
 	npm config set registry http://registry.npmjs.org/
 
-7. git 
+<a id="markdown-7-git" name="7-git"></a>
+### 7. git 
 	from http://stackoverflow.com/questions/783811/getting-git-to-work-with-a-proxy-server
 
 	Command to use:
@@ -119,5 +134,39 @@
     		"proxy":"http://10.160.0.45:80",    		
 		}
 		and then F6 to save
-
 		
+<a id="markdown-10-install-typing-behind-corporate-proxy" name="10-install-typing-behind-corporate-proxy"></a>
+### 10. install typing behind corporate proxy
+	from here: http://stackoverflow.com/questions/37816106/install-typing-packages-behind-corporate-proxy
+	I do 
+		create a file name .typingsrc in user root folder (%userprofile%)
+		and add this (ini format not json format)
+
+		proxy="http://10.160.0.45:80"
+		rejectUnauthorized=false 
+
+<a id="markdown-11-vs-code-setting-sync-behind-the-proxy" name="11-vs-code-setting-sync-behind-the-proxy"></a>
+### 11. vs code setting sync behind the proxy
+	from https://github.com/shanalikhan/code-settings-sync/issues/60
+	In VSCode, I checked Help/Toggle Developer Tools, I saw error timeout
+	So I modify %userprofile%\.vscode\extensions\Shan.code-settings-sync-2.3.3\node_modules\github\index.js
+	with
+		I added 
+
+		 // Kiet
+        var agent1 = new HttpsProxyAgent("http://10.160.0.47:80");
+
+        var options = {
+            host: host,
+            port: port,
+            path: path,
+            method: method,
+            headers: headers,
+            agent: agent1,  <-- add it also            
+            ca: ca            
+        };
+	
+	and it works!
+	
+
+

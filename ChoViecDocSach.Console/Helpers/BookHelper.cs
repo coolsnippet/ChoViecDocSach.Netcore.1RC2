@@ -28,7 +28,7 @@ namespace Onha.Kiet
 
         // include 3 files: html (content), opf (main file) and ncx (content file)
         // http://www.aliciaramirez.com/2014/05/how-to-make-a-kindle-ebook-from-scratch/
-        public string CreateKindleFiles(string firstpageUrl)
+        public string CreateKindleFiles(string firstpageUrl, string alreadyHtmlFile = null)
         {
             // 1. get the book base on website structure
             book = website.GetOneWholeHtml(firstpageUrl);
@@ -68,7 +68,7 @@ namespace Onha.Kiet
             ncxFilename = Path.Combine(Path.GetDirectoryName(htmlFilename), Path.GetFileNameWithoutExtension(htmlFilename) + ".ncx");
             opfBookFilename = Path.Combine(Path.GetDirectoryName(htmlFilename), Path.GetFileNameWithoutExtension(htmlFilename) + ".opf");
             // 3. create 3 files
-            CreateHtmlFile();
+            CreateHtmlFile(alreadyHtmlFile);
             CreateNCXTableOfContent();
             CreateOPFBookDetail();
 
@@ -188,8 +188,15 @@ namespace Onha.Kiet
             File.WriteAllText(ncxFilename, ncx);
         }
 
-        private void CreateHtmlFile()
+        private void CreateHtmlFile(string alreadyHtmlFile = null)
         {
+            // in md note, we already have html file 
+            if (alreadyHtmlFile!= null)
+            {
+                if (File.Exists(htmlFilename)) File.Delete(htmlFilename);
+                File.Copy(alreadyHtmlFile, htmlFilename);
+            }            
+
             // 1. html document for ouputfile
             var output_html = new HtmlDocument();
             output_html.DocumentNode.AppendChild(HtmlNode.CreateNode("<html><head><meta charset=\"UTF-8\"></head><body></body></html>"));
