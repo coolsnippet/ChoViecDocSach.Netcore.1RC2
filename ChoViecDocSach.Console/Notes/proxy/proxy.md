@@ -1,9 +1,9 @@
-<a id="markdown-my-note" name="my-note"></a>
-# My note
+<a id="markdown-proxy" name="proxy"></a>
+# Proxy
 
 <!-- TOC insertAnchor:true orderedList:true -->
 
-1. [My note](#my-note)
+1. [Proxy](#proxy)
     1. [Coorporate proxy, how to find](#coorporate-proxy-how-to-find)
         1. [1. how to find proxy in coorporate](#1-how-to-find-proxy-in-coorporate)
         2. [2. program: pacparser (in chose this)](#2-program-pacparser-in-chose-this)
@@ -24,7 +24,7 @@
 
 <a id="markdown-1-how-to-find-proxy-in-coorporate" name="1-how-to-find-proxy-in-coorporate"></a>
 ### 1. how to find proxy in coorporate
-   here:
+    here:
 	http://stackoverflow.com/questions/22368515/how-to-see-the-proxy-settings-on-windows
 	says that 
 	It's possible to view proxy settings in Google Chrome: ```chrome://net-internals/#proxy```

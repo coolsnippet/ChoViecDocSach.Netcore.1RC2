@@ -265,7 +265,7 @@ namespace Onha.Kiet
 
             if (File.Exists(htmlFilename)) File.Delete(htmlFilename);
 
-            File.WriteAllText(htmlFilename, html);
+            File.WriteAllText(htmlFilename, html, Encoding.UTF8);
         }
 
         private void CreateHtmlFile()
