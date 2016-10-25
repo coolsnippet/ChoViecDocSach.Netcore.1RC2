@@ -4,7 +4,7 @@
 <!-- TOC insertAnchor:true orderedList:true -->
 
 1. [My note](#my-note)
-    1. [Coorporate proxy, ho to find](#coorporate-proxy-ho-to-find)
+    1. [Coorporate proxy, how to find](#coorporate-proxy-how-to-find)
         1. [1. how to find proxy in coorporate](#1-how-to-find-proxy-in-coorporate)
         2. [2. program: pacparser (in chose this)](#2-program-pacparser-in-chose-this)
         3. [3. SAMPLE (run this)](#3-sample-run-this)
@@ -19,15 +19,15 @@
 
 <!-- /TOC -->
 
-<a id="markdown-coorporate-proxy-ho-to-find" name="coorporate-proxy-ho-to-find"></a>
-## Coorporate proxy, ho to find 
+<a id="markdown-coorporate-proxy-how-to-find" name="coorporate-proxy-how-to-find"></a>
+## Coorporate proxy, how to find 
 
 <a id="markdown-1-how-to-find-proxy-in-coorporate" name="1-how-to-find-proxy-in-coorporate"></a>
 ### 1. how to find proxy in coorporate
    here:
 	http://stackoverflow.com/questions/22368515/how-to-see-the-proxy-settings-on-windows
 	says that 
-	It's possible to view proxy settings in Google Chrome: chrome://net-internals/#proxy
+	It's possible to view proxy settings in Google Chrome: ```chrome://net-internals/#proxy```
 
 <a id="markdown-2-program-pacparser-in-chose-this" name="2-program-pacparser-in-chose-this"></a>
 ### 2. program: pacparser (in chose this)

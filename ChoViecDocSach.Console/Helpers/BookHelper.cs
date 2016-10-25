@@ -28,7 +28,7 @@ namespace Onha.Kiet
 
         // include 3 files: html (content), opf (main file) and ncx (content file)
         // http://www.aliciaramirez.com/2014/05/how-to-make-a-kindle-ebook-from-scratch/
-        public string CreateKindleFiles(string firstpageUrl, string alreadyHtmlFile = null)
+        public string CreateKindleFiles(string firstpageUrl, bool forNote = false)
         {
             // 1. get the book base on website structure
             book = website.GetOneWholeHtml(firstpageUrl);
@@ -68,8 +68,18 @@ namespace Onha.Kiet
             ncxFilename = Path.Combine(Path.GetDirectoryName(htmlFilename), Path.GetFileNameWithoutExtension(htmlFilename) + ".ncx");
             opfBookFilename = Path.Combine(Path.GetDirectoryName(htmlFilename), Path.GetFileNameWithoutExtension(htmlFilename) + ".opf");
             // 3. create 3 files
-            CreateHtmlFile(alreadyHtmlFile);
-            CreateNCXTableOfContent();
+            if (!forNote)
+            {
+                CreateHtmlFile();
+                CreateNCXTableOfContent();
+            }
+            else
+            {
+                // for note
+                CreateHtmlFileFromNoteHtml();
+                CreateNCXTableOfContentForNoteHtml();
+            }
+           
             CreateOPFBookDetail();
 
             // 4. Create mobile kindle file
@@ -147,6 +157,50 @@ namespace Onha.Kiet
             File.WriteAllText(opfBookFilename, opf);
         }
 
+        private void CreateNCXTableOfContentForNoteHtml()
+        {
+            var ncx = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+				     <!DOCTYPE ncx PUBLIC ""-//NISO//DTD ncx 2005-1//EN""
+                     ""http://www.daisy.org/z3986/2005/ncx-2005-1.dtd"" >
+                     <ncx xmlns = ""http://www.daisy.org/z3986/2005/ncx/"" version = ""2005-1"">
+    				 <head>
+    				 </head> 
+				     <docTitle>
+               	     <text>{0}</text>
+        			 </docTitle>
+					 {1}
+					 </ncx>"
+                             ;
+            var toc = book.TableOfContent.Descendants("a").Select(n => new KeyValuePair<string, string> 
+                                                                (n.InnerText, n.Attributes["href"].Value)
+                                                            );
+
+            var count = 2;
+            htmlFilename = Path.GetFileName(htmlFilename);
+
+            var body = new XElement("navMap",
+                                new XElement("navPoint", new XAttribute("id", "toc"), new XAttribute("playOrder", "1"),
+                                        new XElement("navLabel",
+                                            new XElement("text", "Mục Lục")
+                                        ),
+                                        new XElement("content", new XAttribute("src", htmlFilename + "#toc"))
+                                ),
+
+                                from chapter in toc
+                                select new XElement("navPoint", new XAttribute("id", chapter.Key), new XAttribute("playOrder", (count++)),
+                                        new XElement("navLabel",
+                                            new XElement("text", chapter.Key)
+                                        ),
+                                        new XElement("content", new XAttribute("src", htmlFilename + "#" + chapter.Value))
+                                )
+                        );
+
+
+            ncx = string.Format(ncx, book.Title, body.ToString());
+
+            File.WriteAllText(ncxFilename, ncx);
+        }
+
         private void CreateNCXTableOfContent()
         {
             var ncx = @"<?xml version=""1.0"" encoding=""UTF-8""?>
@@ -188,16 +242,34 @@ namespace Onha.Kiet
             File.WriteAllText(ncxFilename, ncx);
         }
 
-        private void CreateHtmlFile(string alreadyHtmlFile = null)
+        private void CreateHtmlFileFromNoteHtml()
         {
-            // in md note, we already have html file 
-            if (alreadyHtmlFile!= null)
-            {
-                if (File.Exists(htmlFilename)) File.Delete(htmlFilename);
-                File.Copy(alreadyHtmlFile, htmlFilename);
-                return;
-            }          
-            // back to normal  
+            var html = @"<html>
+                            <head>
+                                <meta charset=""UTF-8"">
+                                <title>{title}</title>
+                                <style>.center { text-align: center; } .pagebreak { page-break-before: always; } </style>                               
+                            </head>
+                            <body>
+                                <div id=""toc"" class=""center"">
+                                    <h2>Mục Lục</h2>
+                                    {tableOfContent}
+                                </div>
+                                {body}
+                            </body>
+                        </html>";
+
+            html = html.Replace("{title}", book.Title);
+            html = html.Replace("{tableOfContent}", book.TableOfContent.InnerHtml);
+            html = html.Replace("{body}", book.Chapters.ElementAt(0).Content.InnerHtml);
+
+            if (File.Exists(htmlFilename)) File.Delete(htmlFilename);
+
+            File.WriteAllText(htmlFilename, html);
+        }
+
+        private void CreateHtmlFile()
+        {
 
             // 1. html document for ouputfile
             var output_html = new HtmlDocument();
@@ -226,7 +298,7 @@ namespace Onha.Kiet
                 SaveImagesToFiles(chapter.Images, imagePath);
             }
             // 5. remove style attributes (font-size)
-            // RemoveHardStyleSize(output_body);
+            RemoveHardStyleSize(output_body);
 
             // 6.output_html.Save(output_downloadFile, Encoding.UTF8);	
             if (File.Exists(htmlFilename)) File.Delete(htmlFilename);

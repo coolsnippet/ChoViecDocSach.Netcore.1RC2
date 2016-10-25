@@ -38,7 +38,7 @@ namespace ChoViecDocSach.Web.Controllers
             } else if (firstPageUri.Scheme == "file"){
                 var note = new MyNote();
                 var bookHelper = new BookHelper(note);
-                var kindleFile = bookHelper.CreateKindleFiles(url, firstPageUri.AbsolutePath);
+                var kindleFile = bookHelper.CreateKindleFiles(url, true);
             }
 
             return View("Index");
