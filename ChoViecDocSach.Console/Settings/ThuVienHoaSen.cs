@@ -76,7 +76,8 @@ namespace Onha.Kiet
             if (chapter_div != null)
             {
                 return chapter_div.Descendants("a")
-                           .Where(n => n.Attributes["title"] != null)
+                           .Where(n => n.Attributes["title"] != null
+                                && !n.Attributes["href"].Value.Contains("javascript"))
                            .Select(item => new KeyValuePair<string, string>(
                                System.Net.WebUtility.HtmlDecode(item.InnerHtml), //key is name of each chapter
                                item.Attributes["href"].Value // value is the link
