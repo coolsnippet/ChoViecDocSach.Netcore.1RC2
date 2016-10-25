@@ -149,7 +149,7 @@
 ### 11. vs code setting sync behind the proxy
 	from https://github.com/shanalikhan/code-settings-sync/issues/60
 	In VSCode, I checked Help/Toggle Developer Tools, I saw error timeout
-	So I modify %userprofile%\.vscode\extensions\Shan.code-settings-sync-2.3.3\node_modules\github\index.js
+	So I modify %userprofile%\.vscode\extensions\Shan.code-settings-sync-2.3.3\node_modules\github\lib\index.js
 	with
 		I added 
 
