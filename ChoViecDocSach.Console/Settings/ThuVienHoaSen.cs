@@ -99,6 +99,30 @@ namespace Onha.Kiet
                                      && System.Net.WebUtility.HtmlDecode(n.InnerText).Contains((char)13) == false // <> '\r'
                                      & !System.Net.WebUtility.HtmlDecode(n.InnerText).Contains("Tủ Sách Đạo Phật Ngày Nay") // ignore this title
                                      & !string.IsNullOrEmpty(System.Net.WebUtility.HtmlDecode(n.InnerText).Trim()) // no empty line
+                                     & System.Net.WebUtility.HtmlDecode(n.InnerText).Trim().Length <= 50 // don't want to long length
+                                    & 
+                                        (
+                                            ( 
+                                            n.ParentNode.Name == "span"
+                                            &&  n.ParentNode.Attributes["style"] != null 
+                                            && n.ParentNode.Attributes["style"].Value.Contains("#ff0000")  // red 
+                                            )
+                                        ||
+                                            ( 
+                                                n.ParentNode.ParentNode.Name == "span"
+                                                &&  n.ParentNode.ParentNode.Attributes["style"] != null 
+                                                && n.ParentNode.ParentNode.Attributes["style"].Value.Contains("#ff0000")  // red 
+                                            )                                        
+                                         ||
+                                            ( 
+                                                n.ParentNode.ParentNode.ParentNode.Name == "span"
+                                                &&  n.ParentNode.ParentNode.ParentNode.Attributes["style"] != null 
+                                                && n.ParentNode.ParentNode.ParentNode.Attributes["style"].Value.Contains("#ff0000")  // red 
+                                            )
+                                        )
+
+                                        
+                                        
                                      );
 
             book.Title = "Thích ca mâu ni";
@@ -108,15 +132,19 @@ namespace Onha.Kiet
 
             if (texts != null)
             {
-                book.Title = System.Net.WebUtility.HtmlDecode(texts.FirstOrDefault().InnerText).Trim();
-                book.Creator = System.Net.WebUtility.HtmlDecode(texts.ElementAt(1).InnerText).Trim();
+                var firstLine = texts.FirstOrDefault();
+                var secondLine = texts.Count() > 1? texts.ElementAt(1) : firstLine;
+                var thirdLine = (texts.Count() > 2 && secondLine != null) ? texts.ElementAt(2) : firstLine;
+
+                book.Title = System.Net.WebUtility.HtmlDecode(firstLine.InnerText).Trim();
+                book.Creator = System.Net.WebUtility.HtmlDecode(secondLine.InnerText).Trim();
 
                 if (book.Title.EndsWith(",")
                 || book.Title.EndsWith(":")
                 )
                 {
                     book.Title = book.Title + book.Creator;
-                    book.Creator = System.Net.WebUtility.HtmlDecode(texts.ElementAt(2).InnerText).Trim();
+                    book.Creator = System.Net.WebUtility.HtmlDecode(thirdLine.InnerText).Trim();
                 }
             }
 
