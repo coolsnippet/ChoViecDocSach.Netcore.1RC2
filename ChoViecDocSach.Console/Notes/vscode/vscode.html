@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="css/style.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<!-- TOC insertAnchor:true orderedList:true -->
+<ol>
+<li><a href="#intellisense">Intellisense</a></li>
+<li><a href="#running-net-on-multiple-framework">Running .net on multiple framework</a></li>
+<li><a href="#packages-like-quartz-newtonsoftjson">packages like Quartz, Newtonsoft.Json</a></li>
+<li><a href="#support-target-frameworks">support target frameworks:</a></li>
+<li><a href="#sample-of-multiple-framework-projectjson">sample of multiple framework project.json</a></li>
+</ol>
+<!-- /TOC -->
+<p><a id="markdown-intellisense" name="intellisense"></a></p>
+<h2 id="intellisense">Intellisense</h2>
+<p>at the right corner, select which ative project with project.json file</p>
+<p><a id="markdown-running-net-on-multiple-framework" name="running-net-on-multiple-framework"></a></p>
+<h2 id="running-.net-on-multiple-framework">Running .net on multiple framework</h2>
+<p>from<br />
+<a href="https://blogs.msdn.microsoft.com/cesardelatorre/2016/06/28/running-net-core-apps-on-multiple-frameworks-and-what-the-target-framework-monikers-tfms-are-about/" class="uri">https://blogs.msdn.microsoft.com/cesardelatorre/2016/06/28/running-net-core-apps-on-multiple-frameworks-and-what-the-target-framework-monikers-tfms-are-about/</a></p>
+<p><a id="markdown-packages-like-quartz-newtonsoftjson" name="packages-like-quartz-newtonsoftjson"></a></p>
+<h2 id="packages-like-quartz-newtonsoft.json">packages like Quartz, Newtonsoft.Json</h2>
+<p>those packages can put into project.json and it will be restored</p>
+<p><a id="markdown-support-target-frameworks" name="support-target-frameworks"></a></p>
+<h2 id="support-target-frameworks">support target frameworks:</h2>
+<p>from <a href="https://docs.nuget.org/ndocs/schema/target-frameworks" class="uri">https://docs.nuget.org/ndocs/schema/target-frameworks</a><br />
+<img src="image_thumb831.png" alt="if else with platform specific code" /></p>
+<p><img src="image_thumb830.png" alt="dot net monkier" /></p>
+<p><a id="markdown-sample-of-multiple-framework-projectjson" name="sample-of-multiple-framework-projectjson"></a></p>
+<h2 id="sample-of-multiple-framework-project.json">sample of multiple framework project.json</h2>
+<p>from <a href="https://gist.github.com/CESARDELATORRE/9d6a236f28056fa7bcd7c12c45deae22" class="uri">https://gist.github.com/CESARDELATORRE/9d6a236f28056fa7bcd7c12c45deae22</a></p>
+<pre><code>{
+&quot;dependencies&quot;: {
+    &quot;Microsoft.AspNetCore.Mvc&quot;: &quot;1.0.0&quot;,
+    &quot;Microsoft.AspNetCore.Server.IISIntegration&quot;: &quot;1.0.0&quot;,
+    &quot;Microsoft.AspNetCore.Server.Kestrel&quot;: &quot;1.0.0&quot;,
+    &quot;Microsoft.Extensions.Configuration.EnvironmentVariables&quot;: &quot;1.0.0&quot;,
+    &quot;Microsoft.Extensions.Configuration.FileExtensions&quot;: &quot;1.0.0&quot;,
+    &quot;Microsoft.Extensions.Configuration.Json&quot;: &quot;1.0.0&quot;,
+    &quot;Microsoft.Extensions.Logging&quot;: &quot;1.0.0&quot;,
+    &quot;Microsoft.Extensions.Logging.Console&quot;: &quot;1.0.0&quot;,
+    &quot;Microsoft.Extensions.Logging.Debug&quot;: &quot;1.0.0&quot;,
+    &quot;Microsoft.Extensions.Options.ConfigurationExtensions&quot;: &quot;1.0.0&quot;
+},
+
+&quot;tools&quot;: {
+    &quot;Microsoft.AspNetCore.Server.IISIntegration.Tools&quot;: &quot;1.0.0-preview2-final&quot;
+},
+
+&quot;frameworks&quot;: {
+    &quot;netcoreapp1.0&quot;: {
+    &quot;imports&quot;: [
+        &quot;dotnet5.6&quot;,
+        &quot;portable-net45+win8&quot;
+    ],
+    &quot;dependencies&quot;: {
+        &quot;Microsoft.NETCore.App&quot;: {
+        &quot;type&quot;: &quot;platform&quot;,
+        &quot;version&quot;: &quot;1.0.0&quot;
+        }
+    }
+    },
+    &quot;net452&quot;: {
+    }
+},
+
+&quot;buildOptions&quot;: {
+    &quot;emitEntryPoint&quot;: true,
+    &quot;preserveCompilationContext&quot;: true
+},
+
+&quot;runtimeOptions&quot;: {
+    &quot;configProperties&quot;: {
+    &quot;System.GC.Server&quot;: true
+    }
+},
+
+&quot;publishOptions&quot;: {
+    &quot;include&quot;: [
+    &quot;wwwroot&quot;,
+    &quot;Views&quot;,
+    &quot;Areas/**/Views&quot;,
+    &quot;appsettings.json&quot;,
+    &quot;web.config&quot;
+    ]
+},
+
+&quot;scripts&quot;: {
+    &quot;postpublish&quot;: [ &quot;dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%&quot; ]
+}
+}</code></pre>
+</body>
+</html>
